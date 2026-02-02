@@ -31,7 +31,9 @@ namespace HotelListing.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Country>> GetCountry(int id)
         {
-            var country = await _context.Countries.FindAsync(id);
+            var country = await _context.Countries
+                .Include(c => c.Hotels) // Eager loading of related Hotels
+                .FirstOrDefaultAsync(c => c.CountryId == id);
 
             if (country == null)
             {
